@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  web.mvc:
+    image: ${DOCKER_REGISTRY-}webmvc
+    build:
+      context: .
+      dockerfile: Web.MVC/Dockerfile
+    depends_on:
+      - redis
+
+  consoleapp:
+    image: ${DOCKER_REGISTRY-}consoleapp
+    build:
+      context: .
+      dockerfile: ConsoleApp/Dockerfile
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
